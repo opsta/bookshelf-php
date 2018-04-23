@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      BOOKSHELF_DEBUG: "true"
+      BOOKSHELF_BACKEND: mysql
+      CLOUDSQL_CONNECTION_NAME: host=db
+      CLOUDSQL_DATABASE_NAME: bsdb
+      CLOUDSQL_USER: bsuser
+      CLOUDSQL_PASSWORD: bspass
+      CLOUDSQL_PORT: 3306
+  db:
+    image: mariadb:10.3.6
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: bsdb
+      MYSQL_USER: bsuser
+      MYSQL_PASSWORD: bspass
