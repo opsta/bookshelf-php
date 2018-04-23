@@ -76,18 +76,19 @@ $app->post('/books/add', function (Request $request) use ($app) {
         $book['created_by_id'] = $app['user']['id'];
     }
 
-    # [START publish_topic]
-    if ($id = $model->create($book)) {
-        /** @var Google\Cloud\PubSub\PubSub\Topic $topic */
-        $topic = $app['pubsub.topic'];
-        $topic->publish([
-            'data' => 'Updated Book',
-            'attributes' => [
-                'id' => $id
-            ]
-        ]);
-    }
-    # [END publish_topic]
+    $model->create($book);
+    // # [START publish_topic]
+    // if ($id = $model->create($book)) {
+    //     /** @var Google\Cloud\PubSub\PubSub\Topic $topic */
+    //     $topic = $app['pubsub.topic'];
+    //     $topic->publish([
+    //         'data' => 'Updated Book',
+    //         'attributes' => [
+    //             'id' => $id
+    //         ]
+    //     ]);
+    // }
+    // # [END publish_topic]
 
     return $app->redirect("/books/$id");
 });
@@ -146,14 +147,14 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     }
     // [END add_image]
     if ($model->update($book)) {
-        /** @var Google\Cloud\PubSub\Topic $topic */
-        $topic = $app['pubsub.topic'];
-        $topic->publish([
-            'data' => 'Edit Book',
-            'attributes' => [
-                'id' => $id
-            ]
-        ]);
+        // /** @var Google\Cloud\PubSub\Topic $topic */
+        // $topic = $app['pubsub.topic'];
+        // $topic->publish([
+        //     'data' => 'Edit Book',
+        //     'attributes' => [
+        //         'id' => $id
+        //     ]
+        // ]);
 
         return $app->redirect("/books/$id");
     }

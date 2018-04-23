@@ -193,7 +193,7 @@ $app['bookshelf.model'] = function ($app) {
             $mysql_dsn = Sql::getMysqlDsn(
                 $config['cloudsql_database_name'],
                 $config['cloudsql_port'],
-                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
+                getenv('MYSQL_CONNECTION') ? getenv('MYSQL_CONNECTION') : $config['cloudsql_connection_name']
             );
             return new Sql(
                 $mysql_dsn,
@@ -204,7 +204,7 @@ $app['bookshelf.model'] = function ($app) {
             $postgres_dsn = Sql::getPostgresDsn(
                 $config['cloudsql_database_name'],
                 $config['cloudsql_port'],
-                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
+                getenv('MYSQL_CONNECTION') ? getenv('MYSQL_CONNECTION') : $config['cloudsql_connection_name']
             );
             return new Sql(
                 $postgres_dsn,
