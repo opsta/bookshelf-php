@@ -48,67 +48,67 @@ class AppTest extends WebTestCase
         return $app;
     }
 
-    public function testBookshelfModelMysql()
-    {
-        $config = $this->app['config'];
-        $config['bookshelf_backend'] = 'mysql';
+    // public function testBookshelfModelMysql()
+    // {
+    //     $config = $this->app['config'];
+    //     $config['bookshelf_backend'] = 'mysql';
 
-        // use MySQL config
-        foreach ($this->cloudSqlConfigs as $name) {
-            $config['cloudsql_' . $name] = $config['mysql_' . $name];
-        }
+    //     // use MySQL config
+    //     foreach ($this->cloudSqlConfigs as $name) {
+    //         $config['cloudsql_' . $name] = $config['mysql_' . $name];
+    //     }
 
-        $this->app['config'] = $config;
+    //     $this->app['config'] = $config;
 
-        $this->assertInstanceOf(
-            'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
-            $this->app['bookshelf.model']
-        );
-    }
+    //     $this->assertInstanceOf(
+    //         'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
+    //         $this->app['bookshelf.model']
+    //     );
+    // }
 
-    public function testBookshelfModelPostgres()
-    {
-        $config = $this->app['config'];
-        $config['bookshelf_backend'] = 'postgres';
+    // public function testBookshelfModelPostgres()
+    // {
+    //     $config = $this->app['config'];
+    //     $config['bookshelf_backend'] = 'postgres';
 
-        // use MySQL config
-        foreach ($this->cloudSqlConfigs as $name) {
-            $config['cloudsql_' . $name] = $config['postgres_' . $name];
-        }
+    //     // use MySQL config
+    //     foreach ($this->cloudSqlConfigs as $name) {
+    //         $config['cloudsql_' . $name] = $config['postgres_' . $name];
+    //     }
 
-        $this->app['config'] = $config;
+    //     $this->app['config'] = $config;
 
-        $this->assertInstanceOf(
-            'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
-            $this->app['bookshelf.model']
-        );
-    }
+    //     $this->assertInstanceOf(
+    //         'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
+    //         $this->app['bookshelf.model']
+    //     );
+    // }
 
-    public function testBookshelfModelDatastore()
-    {
-        $config = $this->app['config'];
-        $config['bookshelf_backend'] = 'datastore';
+    // public function testBookshelfModelDatastore()
+    // {
+    //     $config = $this->app['config'];
+    //     $config['bookshelf_backend'] = 'datastore';
 
-        $this->app['config'] = $config;
+    //     $this->app['config'] = $config;
 
-        $this->assertInstanceOf(
-            'Google\Cloud\Samples\Bookshelf\DataModel\Datastore',
-            $this->app['bookshelf.model']
-        );
-    }
+    //     $this->assertInstanceOf(
+    //         'Google\Cloud\Samples\Bookshelf\DataModel\Datastore',
+    //         $this->app['bookshelf.model']
+    //     );
+    // }
 
-    public function testBookshelfModelMongoDb()
-    {
-        $config = $this->app['config'];
-        $config['bookshelf_backend'] = 'mongodb';
+    // public function testBookshelfModelMongoDb()
+    // {
+    //     $config = $this->app['config'];
+    //     $config['bookshelf_backend'] = 'mongodb';
 
-        $this->app['config'] = $config;
+    //     $this->app['config'] = $config;
 
-        $this->assertInstanceOf(
-            'Google\Cloud\Samples\Bookshelf\DataModel\MongoDb',
-            $this->app['bookshelf.model']
-        );
-    }
+    //     $this->assertInstanceOf(
+    //         'Google\Cloud\Samples\Bookshelf\DataModel\MongoDb',
+    //         $this->app['bookshelf.model']
+    //     );
+    // }
 
     /**
      * @expectedException DomainException
@@ -140,10 +140,10 @@ class AppTest extends WebTestCase
         $model = $this->app['bookshelf.model'];
     }
 
-    public function testPubsubServer()
-    {
-        // smoke test
-        $server = $this->app['pubsub.server'];
-        $server->loop->tick();
-    }
+    // public function testPubsubServer()
+    // {
+    //     // smoke test
+    //     $server = $this->app['pubsub.server'];
+    //     $server->loop->tick();
+    // }
 }

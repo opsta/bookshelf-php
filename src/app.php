@@ -162,11 +162,11 @@ $app['pubsub.server'] = function ($app) {
 
 // Cloud Storage
 $app['bookshelf.storage'] = function ($app) {
-    /** @var array $config */
-    $config = $app['config'];
-    $projectId = $config['google_project_id'];
-    $bucketName = $projectId . '.appspot.com';
-    return new CloudStorage($projectId, $bucketName);
+    // /** @var array $config */
+    // $config = $app['config'];
+    // $projectId = $config['google_project_id'];
+    // $bucketName = $projectId . '.appspot.com';
+    // return new CloudStorage($projectId, $bucketName);
 };
 
 // determine the datamodel backend using the app configuration
