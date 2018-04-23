@@ -56,11 +56,36 @@ $app->register(new TwigServiceProvider(), array(
 // register the url generator
 $app->register(new UrlGeneratorServiceProvider);
 
-// parse configuration
-$config = getenv('BOOKSHELF_CONFIG') ?:
-    __DIR__ . '/../config/' . 'settings.yml';
+// allow the setting of environment variables
+$config = array(
+  'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
+  'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
+  'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
+  'pubsub_topic_name' => getenv('PUBSUB_TOPIC_NAME'),
+  'pubsub_subscription_name' => getenv('PUBSUB_SUBSCRIPTION_NAME'),
+  'bookshelf_backend' => getenv('BOOKSHELF_BACKEND') ?: 'mysql',
+  'cloudsql_connection_name' => getenv('CLOUDSQL_CONNECTION_NAME'),
+  'cloudsql_database_name' => getenv('CLOUDSQL_DATABASE_NAME'),
+  'cloudsql_user' => getenv('CLOUDSQL_USER'),
+  'cloudsql_password' => getenv('CLOUDSQL_PASSWORD'),
+  'cloudsql_port' => getenv('CLOUDSQL_PORT') ?: 3306,
+  'mongo_url' => getenv('MONGO_URL'),
+  'mongo_database' => getenv('MONGO_DATABASE'),
+  'mongo_collection' => getenv('MONGO_COLLECTION')
+);
 
-$app['config'] = Yaml::parse(file_get_contents($config));
+// if a local config exists, use it
+$settings = array();
+if (file_exists($f = __DIR__ . '/../config/settings.yml')) {
+  $settings = Yaml::parse(file_get_contents($f));
+}
+$app['config'] = array_merge($settings, array_filter($config));
+
+// // parse configuration
+// $config = getenv('BOOKSHELF_CONFIG') ?:
+//     __DIR__ . '/../config/' . 'settings.yml';
+
+// $app['config'] = Yaml::parse(file_get_contents($config));
 
 // register the session handler
 // [START session]
