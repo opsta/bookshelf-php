@@ -1,0 +1,14 @@
+web:
+  image: opsta/bookshelf-php
+  tag: latest
+  debug: "true"
+  replicas: 1
+db:
+  image: mariadb
+  tag: 10.3.6
+credential:
+  mysqlRootPassword: prodrootpass
+  mysqlDatabase: prodbsdb
+  mysqlUser: prodbsuser
+  mysqlPassword: prodbspass
+  mysqlPort: 3306

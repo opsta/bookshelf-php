@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bsdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bsdb
+  template:
+    metadata:
+      labels:
+        app: bsdb
+    spec:
+      containers:
+      - image: mariadb:10.3.6
+        name: bsdb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "rootpass"
+        - name: MYSQL_DATABASE
+          value: "bsdb"
+        - name: MYSQL_USER
+          value: "bsuser"
+        - name: MYSQL_PASSWORD
+          value: "bspass"

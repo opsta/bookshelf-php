@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bsweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bsweb
+  template:
+    metadata:
+      labels:
+        app: bsweb
+    spec:
+      containers:
+      - image: opsta/bookshelf-php
+        name: bsweb
+        env:
+        - name: BOOKSHELF_DEBUG
+          value: "true"
+        - name: BOOKSHELF_BACKEND
+          value: "mysql"
+        - name: CLOUDSQL_CONNECTION_NAME
+          value: "host=bsdb"
+        - name: CLOUDSQL_DATABASE_NAME
+          value: "bsdb"
+        - name: CLOUDSQL_USER
+          value: "bsuser"
+        - name: CLOUDSQL_PASSWORD
+          value: "bspass"
+        - name: CLOUDSQL_PORT
+          value: "3306"
