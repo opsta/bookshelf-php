@@ -6,7 +6,8 @@ properties([
   ])
 ])
 
-podTemplate(label: 'bookshelf-slave', cloud: 'gke-2', containers: [
+def label = "bookshelf-${UUID.randomUUID().toString()}"
+podTemplate(label: label, cloud: 'gke-2', containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'git', image: 'paasmule/curl-ssl-git', command: 'cat', ttyEnabled: true)
@@ -14,7 +15,7 @@ podTemplate(label: 'bookshelf-slave', cloud: 'gke-2', containers: [
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
 ]) {
-  node('bookshelf-slave') {
+  node(label) {
 
     appName = 'bookshelf'
 
@@ -24,7 +25,7 @@ podTemplate(label: 'bookshelf-slave', cloud: 'gke-2', containers: [
         container('docker') {
           imageTag = "opsta/${appName}:uat"
           imageTagProd = "opsta/${appName}:build-${env.BUILD_NUMBER}"
-          withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+          withCredentials([usernamePassword(credentialsId: 'dockerhub-opsta', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
             sh """
               docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
               docker pull ${imageTag}
@@ -95,7 +96,7 @@ podTemplate(label: 'bookshelf-slave', cloud: 'gke-2', containers: [
 
       stage('Push image to registry') {
         container('docker') {
-          withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+          withCredentials([usernamePassword(credentialsId: 'dockerhub-opsta', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
             sh """
               docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
               docker push ${imageTag}
