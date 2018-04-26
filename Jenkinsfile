@@ -59,7 +59,7 @@ podTemplate(label: label, cloud: 'gke-2', containers: [
     } else if(params.ACTION == "deploy-production") {
       // Deploy to production
       stage('Deploy production') {
-        checkout scm
+        scmVars = checkout scm
         container('helm') {
           withCredentials([file(credentialsId: 'kubeconfig-gke-2', variable: 'KUBECONFIG')]) {
             sh """
