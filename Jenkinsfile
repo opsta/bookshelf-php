@@ -6,7 +6,7 @@ properties([
   ])
 ])
 
-podTemplate(label: 'bookshelf-slave', containers: [
+podTemplate(label: 'bookshelf-slave', cloud: 'gke-2', containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'git', image: 'paasmule/curl-ssl-git', command: 'cat', ttyEnabled: true)
