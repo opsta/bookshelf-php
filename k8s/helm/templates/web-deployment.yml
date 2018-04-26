@@ -30,3 +30,5 @@ spec:
           value: "{{ .Values.credential.mysqlPassword }}"
         - name: CLOUDSQL_PORT
           value: "{{ .Values.credential.mysqlPort }}"
+        - name: COMMIT_ID
+          value: "{{ .Values.web.commitId }}"

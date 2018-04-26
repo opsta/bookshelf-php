@@ -3,6 +3,7 @@ web:
   tag: latest
   debug: "true"
   replicas: 1
+  commitId: CHANGE_COMMIT_ID
 db:
   image: mariadb
   tag: 10.3.6
