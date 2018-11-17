@@ -15,7 +15,7 @@ services:
       CLOUDSQL_PASSWORD: bspass
       CLOUDSQL_PORT: 3306
   db:
-    image: mariadb:10.3.6
+    image: mariadb:10.4.0-bionic
     ports:
       - "3306:3306"
     environment:
