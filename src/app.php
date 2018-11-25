@@ -42,6 +42,11 @@ use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Symfony\Component\Yaml\Yaml;
+// [START gelf]
+use Gelf\Transport\UdpTransport;
+use Gelf\Publisher;
+use Gelf\Message;
+// [END gelf]
 
 $app = new Application();
 
@@ -71,7 +76,9 @@ $config = array(
   'cloudsql_port' => getenv('CLOUDSQL_PORT') ?: 3306,
   'mongo_url' => getenv('MONGO_URL'),
   'mongo_database' => getenv('MONGO_DATABASE'),
-  'mongo_collection' => getenv('MONGO_COLLECTION')
+  'mongo_collection' => getenv('MONGO_COLLECTION'),
+  'gelf_host' => getenv('GELF_HOST'),
+  'gelf_port' => getenv('GELF_PORT')
 );
 
 // if a local config exists, use it
@@ -256,5 +263,21 @@ if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
 
 // add service parameters
 $app['bookshelf.page_size'] = 10;
+
+$app['gelf_publisher'] = function ($app) {
+    // initalize GELF UDP transport & publisher
+    $transport = new Gelf\Transport\UdpTransport(getenv('GELF_HOST'), getenv('GELF_PORT'), Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN);
+    $publisher = new Gelf\Publisher();
+    $publisher->addTransport($transport);
+
+    return $publisher;
+};
+
+$app['gelf_message'] = function ($app) {
+    // initalize GELF message
+    $message = new Gelf\Message();
+
+    return $message;
+};
 
 return $app;

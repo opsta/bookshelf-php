@@ -39,6 +39,14 @@ $app->get('/books/', function (Request $request) use ($app) {
     $token = $request->query->get('page_token');
     $bookList = $model->listBooks($app['bookshelf.page_size'], $token);
 
+    $publisher = $app['gelf_publisher'];
+    $message = $app['gelf_message'];
+    $message->setShortMessage("It works in UDP!")
+        ->setLevel(\Psr\Log\LogLevel::ALERT)
+        ->setFullMessage("YAYYY")
+        ->setAdditional("awesome", "right?");
+    $publisher->publish($message);
+
     return $twig->render('list.html.twig', array(
         'books' => $bookList['books'],
         'next_page_token' => $bookList['cursor'],

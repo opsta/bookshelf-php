@@ -14,6 +14,8 @@ services:
       CLOUDSQL_USER: bsuser
       CLOUDSQL_PASSWORD: bspass
       CLOUDSQL_PORT: 3306
+      GELF_HOST: 10.88.102.218
+      GELF_PORT: 12201
   db:
     image: mariadb:10.4.0-bionic
     ports:
