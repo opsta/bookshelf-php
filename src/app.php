@@ -266,7 +266,8 @@ $app['bookshelf.page_size'] = 10;
 
 $app['gelf_publisher'] = function ($app) {
     // initalize GELF UDP transport & publisher
-    $transport = new Gelf\Transport\UdpTransport(getenv('GELF_HOST'), getenv('GELF_PORT'), Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN);
+    $config = $app['config'];
+    $transport = new Gelf\Transport\UdpTransport($config['gelf_host'], $config['gelf_port'], Gelf\Transport\UdpTransport::CHUNK_SIZE_LAN);
     $publisher = new Gelf\Publisher();
     $publisher->addTransport($transport);
 
