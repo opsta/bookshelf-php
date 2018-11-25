@@ -35,10 +35,14 @@ $app->get('/books/', function (Request $request) use ($app) {
     /** @var DataModelInterface $model */
     $model = $app['bookshelf.model'];
     /** @var Twig_Environment $twig */
+    $statsd = $app['statsd'];
+    $statsd->increment("books.count");
+    $statsd->startTiming("books.timing");
     $twig = $app['twig'];
     $token = $request->query->get('page_token');
     $bookList = $model->listBooks($app['bookshelf.page_size'], $token);
-
+    $statsd->endTiming("books.timing");
+    
     return $twig->render('list.html.twig', array(
         'books' => $bookList['books'],
         'next_page_token' => $bookList['cursor'],

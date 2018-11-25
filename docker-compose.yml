@@ -14,6 +14,9 @@ services:
       CLOUDSQL_USER: bsuser
       CLOUDSQL_PASSWORD: bspass
       CLOUDSQL_PORT: 3306
+      STATSD_HOST: 10.88.102.219
+      STATSD_PORT: 8125
+      STATSD_PREFIX: test
   db:
     image: mariadb:10.4.0-bionic
     ports:

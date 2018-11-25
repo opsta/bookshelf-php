@@ -42,6 +42,10 @@ use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Symfony\Component\Yaml\Yaml;
+// [START statsd]
+use \Domnikl\Statsd\Connection\UdpSocket;
+use \Domnikl\Statsd\Client;
+// [END statsd]
 
 $app = new Application();
 
@@ -71,7 +75,10 @@ $config = array(
   'cloudsql_port' => getenv('CLOUDSQL_PORT') ?: 3306,
   'mongo_url' => getenv('MONGO_URL'),
   'mongo_database' => getenv('MONGO_DATABASE'),
-  'mongo_collection' => getenv('MONGO_COLLECTION')
+  'mongo_collection' => getenv('MONGO_COLLECTION'),
+  'statsd_host' => getenv('STATSD_HOST'),
+  'statsd_port' => getenv('STATSD_PORT'),
+  'statsd_prefix' => getenv('STATSD_PREFIX')
 );
 
 // if a local config exists, use it
@@ -256,5 +263,13 @@ if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
 
 // add service parameters
 $app['bookshelf.page_size'] = 10;
+
+$app['statsd'] = function ($app) {
+    $config = $app['config'];
+    $connection = new \Domnikl\Statsd\Connection\UdpSocket($config['statsd_host'], $config['statsd_port']);
+    $statsd = new \Domnikl\Statsd\Client($connection, $config['statsd_prefix']);
+
+    return $statsd;
+};
 
 return $app;
