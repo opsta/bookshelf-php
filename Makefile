@@ -2,6 +2,10 @@ PWD = $(shell pwd)
 
 all: install run
 
+update:
+	docker run --rm -v "$(PWD):/app" composer:1.7.3 composer update
+	docker run --rm -v "$(PWD):/app" composer:1.7.3 composer install
+
 install:
 	docker run --rm -v "$(PWD):/app" composer:1.7.3 composer install
 
