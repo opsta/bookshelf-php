@@ -39,6 +39,15 @@ $app->get('/books/', function (Request $request) use ($app) {
     $token = $request->query->get('page_token');
     $bookList = $model->listBooks($app['bookshelf.page_size'], $token);
 
+    $publisher = $app['gelf_publisher'];
+    $message = $app['gelf_message'];
+    $message->setShortMessage("User just access book page")
+        ->setLevel(\Psr\Log\LogLevel::ALERT)
+        ->setFullMessage("User just access book page")
+        ->setAdditional("uri", $request->getPathInfo())
+        ->setAdditional("method", $request->getMethod());
+    $publisher->publish($message);
+
     return $twig->render('list.html.twig', array(
         'books' => $bookList['books'],
         'next_page_token' => $bookList['cursor'],
@@ -75,6 +84,18 @@ $app->post('/books/add', function (Request $request) use ($app) {
         $book['created_by'] = $app['user']['name'];
         $book['created_by_id'] = $app['user']['id'];
     }
+
+    $publisher = $app['gelf_publisher'];
+    $message = $app['gelf_message'];
+    $message->setShortMessage("New book just added")
+        ->setLevel(\Psr\Log\LogLevel::ALERT)
+        ->setFullMessage("New book just added with title: " . $book['title'] . ", ID: " . $book['author'])
+        ->setAdditional("title", $book['title'])
+        ->setAdditional("author", $book['author'])
+        ->setAdditional("uri", $request->getPathInfo())
+        ->setAdditional("method", $request->getMethod());
+
+    $publisher->publish($message);
 
     $model->create($book);
     // # [START publish_topic]
@@ -117,6 +138,7 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
     if (!$book) {
         return new Response('', Response::HTTP_NOT_FOUND);
     }
+
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
 
@@ -155,6 +177,16 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
         //         'id' => $id
         //     ]
         // ]);
+        $publisher = $app['gelf_publisher'];
+        $message = $app['gelf_message'];
+        $message->setShortMessage("Book just edited")
+            ->setLevel(\Psr\Log\LogLevel::ALERT)
+            ->setFullMessage("Book just edited with title: " . $book['title'] . ", ID: " . $book['author'])
+            ->setAdditional("title", $book['title'])
+            ->setAdditional("author", $book['author'])
+            ->setAdditional("uri", $request->getPathInfo())
+            ->setAdditional("method", $request->getMethod());
+        $publisher->publish($message);
 
         return $app->redirect("/books/$id");
     }
@@ -181,6 +213,14 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
         // [START logging]
         $app['monolog']->notice('Deleted Book: ' . $book['id']);
         // [END logging]
+        $publisher = $app['gelf_publisher'];
+        $message = $app['gelf_message'];
+        $message->setShortMessage("Book just deleted")
+            ->setLevel(\Psr\Log\LogLevel::ALERT)
+            ->setFullMessage("Book just deleted with title: " . $book['title'] . ", ID: " . $book['author'])
+            ->setAdditional("title", $book['title'])
+            ->setAdditional("author", $book['author']);
+        $publisher->publish($message);
 
         return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
     }
