@@ -17,9 +17,7 @@ services:
       GELF_HOST: 10.88.102.218
       GELF_PORT: 12201
   db:
-    image: mariadb:10.4.0-bionic
-    ports:
-      - "3306:3306"
+    image: mariadb:10.4.7-bionic
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: bsdb
